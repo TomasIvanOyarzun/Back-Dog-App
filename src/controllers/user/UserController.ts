@@ -47,7 +47,7 @@ export const confirmUser = async (req : Request , res : Response, next : NextFun
             await user.save()
         }
          
-        res.json({ msg: "usuario registrado correctamente" });
+        res.json({ error: false,  msg: "usuario registrado correctamente" });
 
     } catch (error) {
         next(error)
