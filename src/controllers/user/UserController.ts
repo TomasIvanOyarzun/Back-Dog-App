@@ -42,12 +42,14 @@ export const confirmUser = async (req : Request , res : Response, next : NextFun
          if(!user) return res.status(400).json({error: true, msg: "invalid token" })
 
         else {
+
             user.token = null
             user.email_confirmed = true
             await user.save()
+            return res.json({ error: false,  msg: "successfully registered user" });
         }
          
-       return res.json({ error: false,  msg: "successfully registered user" });
+      
 
     } catch (error) {
         next(error)
