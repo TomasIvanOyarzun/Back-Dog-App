@@ -7,6 +7,6 @@ import nodemailer from 'nodemailer'
         secure : true,
         auth : {
             user : 'xilent312@gmail.com',
-            pass : 'zrejgnwlljlpaogy'
+            pass : process.env.PASS_APLICATION
         },
     })

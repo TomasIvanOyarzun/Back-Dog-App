@@ -12,8 +12,8 @@ export const registerUser = async (req : Request , res : Response, next : NextFu
     const user = await UserModel.findOne({email})
    
        if(user) {
-           res.status(400).json({ error: true, msg: "usuario ya registrado" });
-           return
+        return  res.status(400).json({ error: true, msg: "User already registered" });
+          
        }
     try {
         const encriptPassword = await bcrypt.hash(password, 10);
@@ -39,7 +39,7 @@ export const confirmUser = async (req : Request , res : Response, next : NextFun
     try {
          const user = await UserModel.findOne({token})
 
-         if(!user) res.status(400).json({error: true, msg: "token no valido" })
+         if(!user) return res.status(400).json({error: true, msg: "invalid token" })
 
         else {
             user.token = null
@@ -47,7 +47,7 @@ export const confirmUser = async (req : Request , res : Response, next : NextFun
             await user.save()
         }
          
-        res.json({ error: false,  msg: "usuario registrado correctamente" });
+       return res.json({ error: false,  msg: "successfully registered user" });
 
     } catch (error) {
         next(error)
@@ -62,23 +62,23 @@ export const authenticateUser = async (req : Request , res : Response, next : Ne
        const userAuthenticate = await UserModel.findOne({email})
       
       if (userAuthenticate === null) {
-        res.status(401).send({ msg: "¡Usuario no existe!" });
-        return;
+       return res.status(401).send({ msg: "User doesn't exist!" });
+       
       }
   
       if (userAuthenticate.email_confirmed === false) {
-        res.status(401).send({ msg: "¡Usuario no confirmado!" });
-        return;
+        return res.status(401).send({ msg: "User not confirmed!" });
+        
       } else {
         const passwordValidate = await bcrypt.compare(password, userAuthenticate.password);
   
         if (!passwordValidate)
-          res.status(401).json({ msg: "¡Password inválido!" });
+          res.status(401).json({ msg: "Invalid password!" });
         else {
           res.status(200).json({
             token: generateJWT(userAuthenticate._id),
             error: false,
-            msg: "Usuario habilitado para loguearse",
+            msg: "User enabled to login",
           });
         }
       }
@@ -93,7 +93,7 @@ export const authenticateUser = async (req : Request , res : Response, next : Ne
     const { pass, newPassword}: updatePassword = req.body;
     const user = await UserModel.findOne({ id });
     if (!user) {
-      res.status(403).json({ error: true, msg: "El usuario no existe" });
+      res.status(403).json({ error: true, msg: "Username does not exist" });
       return;
     }
     try {
@@ -103,10 +103,10 @@ export const authenticateUser = async (req : Request , res : Response, next : Ne
         const encriptPassword = await bcrypt.hash(newPassword, 10);
         user.password = encriptPassword;
         user.save();
-        res.status(200).json({ msg: "Contraseña actualizada" });
+        res.status(200).json({ msg: "updated password" });
         return;
       } else {
-        res.status(500).json({ error: true, msg: "Contraseña incorrecta" });
+        res.status(500).json({ error: true, msg: "Incorrect password" });
         return;
       }
     } catch (error) {
@@ -157,14 +157,22 @@ export const authenticateUser = async (req : Request , res : Response, next : Ne
 
  export const getUpdateUser = async (req: Request, res: Response , next : NextFunction) => {
 
-     const { userName, favorite }   = req.body as userDataPut
+     const { userName, favorite ,email, email_confirmed, image ,role }   = req.body as userDataPut
       const { id} = req.params
   try {
 
-     
+       const userFix = {
+          name : userName ,
+          favorite ,
+          email,
+          email_confirmed,
+          image,
+          role
+
+       }
     
       const user = await UserModel.findByIdAndUpdate(id , 
-        { $set: {...req.body, name : userName,  favorite } },
+        { $set: userFix },
         { new: true })
        
 
