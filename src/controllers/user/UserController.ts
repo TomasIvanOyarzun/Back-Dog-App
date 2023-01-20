@@ -194,10 +194,13 @@ export const getFavoriteUser = async (req: Request, res: Response , next : NextF
   
    
    
-     const user = await UserModel.findById(req.params.id)
+      if(req.params.id !== "undefined") {
+        const user = await UserModel.findById(req.params.id)
+       return  res.status(200).json(user?.favorite)
+      }
     
                           
-     res.status(200).json(user?.favorite)
+     return res.status(400).json({error : true , msg : "an id was not sent"})
     
   } catch (error) {
   

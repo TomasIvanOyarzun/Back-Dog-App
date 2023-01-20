@@ -7,6 +7,7 @@ export interface IDog {
   life_span : string
   image : string
   temperament : string[]
+  user : string
 }
 
 export interface dogApi {

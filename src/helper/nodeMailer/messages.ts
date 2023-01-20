@@ -8,7 +8,7 @@ interface dataEmail {
 export const emailRegister = async (datos : dataEmail) =>{
         
     const {name, email , token } = datos
-    console.log(process.env.FRONTEND_URL)
+   
      await transport.sendMail({
     from : `"Dog - dog breeds "`,
     to: email,
