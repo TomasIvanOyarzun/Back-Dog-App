@@ -4,6 +4,7 @@ import { Dog } from './Dog'
 
 
 
+
 @modelOptions({ options: { disableLowerIndexes: true } })
 class Preference {
     @prop({type : () => [String]})

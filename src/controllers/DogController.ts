@@ -41,11 +41,11 @@ export const getAllDogs = async (req : Request, res: Response, next: NextFunctio
 
 export const postDog = async (req : Request, res: Response, next: NextFunction) => {
        
-       const {name,weight,height,life_span,image, temperament} : IDog = req.body
+       const {name,weight,height,life_span,image, temperament, user} : IDog = req.body
        console.log(req.body)
      try {
         
-        const newDog = new DogModel({name,weight,height,life_span,image, temperament})
+        const newDog = new DogModel({name,weight,height,life_span,image, temperament, user})
 
        await newDog.save()
         

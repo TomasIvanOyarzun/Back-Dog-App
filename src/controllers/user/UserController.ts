@@ -93,23 +93,26 @@ export const authenticateUser = async (req : Request , res : Response, next : Ne
   export const changePassword = async (req: Request, res: Response , next : NextFunction) => {
     const { id } = req.params;
     const { pass, newPassword}: updatePassword = req.body;
-    const user = await UserModel.findOne({ id });
+ 
+    const user = await UserModel.findById(id );
+   
     if (!user) {
-      res.status(403).json({ error: true, msg: "Username does not exist" });
-      return;
+     return  res.status(403).json({ error: true, msg: "Username does not exist" });
+      
     }
     try {
+      
       const passwordValidate = await bcrypt.compare(pass, user.password);
-  
+         
       if (passwordValidate) {
         const encriptPassword = await bcrypt.hash(newPassword, 10);
         user.password = encriptPassword;
         user.save();
-        res.status(200).json({ msg: "updated password" });
-        return;
+        return res.status(200).json({error: false,  msg: "updated password" });
+        
       } else {
-        res.status(500).json({ error: true, msg: "Incorrect password" });
-        return;
+        return res.status(500).json({ error: true, msg: "Incorrect password" });
+        
       }
     } catch (error) {
       next(error)
@@ -128,7 +131,7 @@ export const authenticateUser = async (req : Request , res : Response, next : Ne
   
       const user = {
         _id: userData._id,
-        userName: userData.name,
+        name: userData.name,
         image : userData.image,
         email: userData.email,
         role : userData.role,
