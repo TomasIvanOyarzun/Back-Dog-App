@@ -44,7 +44,6 @@ export const getAllDogs = async (req : Request, res: Response, next: NextFunctio
 }
 
 
-
 export const postDog = async (req : Request, res: Response, next: NextFunction) => {
        
        const {name,weight,height,life_span,image, temperament, user} : IDog = req.body
@@ -76,7 +75,7 @@ export const updateDog = async (req : Request, res: Response, next: NextFunction
         const  dog = await DogModel.findByIdAndUpdate(id, { $set : body}, { new : true})
 
         if (!dog) {
-            res.status(400).json({error : true , msg : 'the dog was not found'})
+            res.status(400).json({error : true , msg : 'the dog was not found!!'})
         }
 
         res.status(200).json(dog)
