@@ -13,26 +13,25 @@ exports.getTemperament = exports.getDogById = exports.updateDog = exports.postDo
 const Dog_1 = require("../models/Dog");
 const Temperament_1 = require("../models/Temperament");
 const getAllDogs = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { temperament } = req.query;
+    const { temperament, height, weight, search, alphabet } = req.query;
+    const page = Math.max(parseInt(req.query.page), 1);
     const order = parseInt(req.query.order);
-    const { height, weight, search, alphabet } = req.query;
     const options = {
         limit: 9,
-        page: parseInt(req.query.page),
+        page,
         sort: { name: order },
     };
-    console.log(alphabet);
-    console.log(search);
     try {
         if (!height && !weight && !search && !alphabet) {
             const dogs = yield Dog_1.DogModel.paginate({ temperament: { "$regex": `${temperament}`, "$options": "i" },
             }, options);
             return res.status(200).json(dogs);
         }
-        const dogs = yield Dog_1.DogModel.paginate({ temperament: { "$regex": `${temperament}`, "$options": "i" },
+        const dogs = yield Dog_1.DogModel.paginate({
+            temperament: { "$regex": `${temperament}`, "$options": "i" },
             height: { "$regex": `${height}`, "$options": "$gte" },
             weight: { "$regex": `${weight}`, "$options": "$gte" },
-            name: { "$regex": `/^${alphabet}/i` },
+            name: { "$regex": `^${search ? search : alphabet}`, "$options": "i" },
         }, options);
         res.status(200).json(dogs);
     }
@@ -60,7 +59,7 @@ const updateDog = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     try {
         const dog = yield Dog_1.DogModel.findByIdAndUpdate(id, { $set: body }, { new: true });
         if (!dog) {
-            res.status(400).json({ error: true, msg: 'the dog was not found' });
+            res.status(400).json({ error: true, msg: 'the dog was not found!!' });
         }
         res.status(200).json(dog);
     }

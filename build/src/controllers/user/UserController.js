@@ -52,6 +52,7 @@ const confirmUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             yield user.save();
             return res.json({ error: false, msg: "successfully registered user" });
         }
+        res.json({ error: false, msg: "usuario registrado correctamente" });
     }
     catch (error) {
         next(error);
