@@ -14,7 +14,7 @@ export const registerUser = async (req : Request , res : Response, next : NextFu
        if(user) {
         return  res.status(400).json({ error: true, msg: "User already registered" });
           
-       }
+       }s
     try {
         const encriptPassword = await bcrypt.hash(password, 10);
         const newUser = new UserModel({name, email, password : encriptPassword})

@@ -12,6 +12,8 @@ export class Like {
 
     @prop({ref : () => User})   
     likeUser : Ref<User>
+
+   
 }
 
 
