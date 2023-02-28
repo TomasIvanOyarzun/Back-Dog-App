@@ -15,14 +15,16 @@ const Temperament_1 = require("../models/Temperament");
 const getAllDogs = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { temperament } = req.query;
     const order = parseInt(req.query.order);
-    const { height, weight, search } = req.query;
+    const { height, weight, search, alphabet } = req.query;
     const options = {
         limit: 9,
         page: parseInt(req.query.page),
         sort: { name: order },
     };
+    console.log(alphabet);
+    console.log(search);
     try {
-        if (!height && !weight && !search) {
+        if (!height && !weight && !search && !alphabet) {
             const dogs = yield Dog_1.DogModel.paginate({ temperament: { "$regex": `${temperament}`, "$options": "i" },
             }, options);
             return res.status(200).json(dogs);
@@ -30,7 +32,7 @@ const getAllDogs = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const dogs = yield Dog_1.DogModel.paginate({ temperament: { "$regex": `${temperament}`, "$options": "i" },
             height: { "$regex": `${height}`, "$options": "$gte" },
             weight: { "$regex": `${weight}`, "$options": "$gte" },
-            name: { "$regex": `${search}`, "$options": "i" }
+            name: { "$regex": `/^${alphabet}/i` },
         }, options);
         res.status(200).json(dogs);
     }

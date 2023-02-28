@@ -5,6 +5,7 @@ const router = Router()
 
 router.post('/create/dog', postDog)
 router.get('/dogs', getAllDogs)
+
 router.put('/dog/:id', updateDog)
 router.get('/dog/:id', getDogById)
 router.get('/temperaments', getTemperament)
